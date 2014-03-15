@@ -5,6 +5,7 @@ var liveDbMongo = require('livedb-mongo');
 var MongoStore = require('connect-mongo')(express);
 var app = require('../app');
 var error = require('./error');
+var util = require('util');
 
 var expressApp = module.exports = express();
 
@@ -22,14 +23,14 @@ if (process.env.REDIS_HOST) {
 redis.select(process.env.REDIS_DB || 1);
 // Get Mongo configuration 
 var mongoUrl = process.env.MONGO_URL || process.env.MONGOHQ_URL ||
-  'mongodb://localhost:27017/project';
+  'mongo://localhost:27017/fitness-center-db';
 
 // The store creates models and syncs data
 var store = derby.createStore({
-  db: {
-    db: liveDbMongo(mongoUrl + '?auto_reconnect', {safe: true})
-  , redis: redis
-  }
+    db: {
+        db: liveDbMongo(mongoUrl + '?auto_reconnect', {safe: true}),
+        redis: redis
+    }
 });
 
 function createUserId(req, res, next) {
@@ -38,6 +39,22 @@ function createUserId(req, res, next) {
   model.set('_session.userId', userId);
   next();
 }
+
+function loadMenus(req, res, next){
+    var model = req.getModel();
+    var isNavigationExists = model.get('_session.navigationItems');
+    console.log('is navigationExists '+ isNavigationExists);
+    if (!isNavigationExists){
+        var navigationQuery = model.query('navigations', {position: 'top-horizontal'});
+        navigationQuery.fetch(function(error){
+            var result = navigationQuery.get()[0];
+            model.set('_session.navigationItems', result.menus);
+            next();
+        });
+    } else {
+        next();
+    }
+};
 
 expressApp
   .use(express.favicon())
@@ -55,8 +72,8 @@ expressApp
   .use(store.modelMiddleware())
 
   // Parse form data
-  // .use(express.bodyParser())
-  // .use(express.methodOverride())
+//   .use(express.bodyParser())
+//   .use(express.methodOverride())
 
   // Session middleware
   .use(express.cookieParser())
@@ -65,6 +82,7 @@ expressApp
   , store: new MongoStore({url: mongoUrl, safe: true})
   }))
   .use(createUserId)
+    .use(loadMenus)
 
   // Create an express middleware from the app's routes
   .use(app.router())
