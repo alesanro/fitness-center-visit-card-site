@@ -3,7 +3,6 @@ var config = {
 , styles: '../styles/ui'
 , scripts: {
     connectionAlert: require('./connectionAlert'),
-    commonHeader: require('./commonHeader'),
   }
 };
 

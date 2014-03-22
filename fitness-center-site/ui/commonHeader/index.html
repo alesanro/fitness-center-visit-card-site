@@ -1,11 +1,30 @@
-<myMenu:>
-    
-    <script lang="javascript">
-        
-    </script>
-    <table>
-        {{#each _session.navigationItems}}
-        <td><a href="{{link}}" style="margin: 0px 10px 0px 10px;">{{title}}</a></td>
-        {/}
-    </table>
-    
+<horizontalMenu:>
+    <div class="centered-menu floating-menu">
+        <div class="">
+		    <table>
+		        {{#each _session.navigationItems}}
+		        <td><a href="{{link}}" class="menuButton">{{title}}</a></td>
+		        {{/}}
+		    </table>
+        </div>
+    </div>
+
+<verticalMenu:>
+	<div class="right-menu">
+		<table>
+			{{#each _session.navigationItems}}
+			<tr><td><a href="{{link}}" class="menuButton">{{title}}</a></td></tr>
+			{{/}}
+        </table>
+    </div>
+
+<adminMenu:>
+    <div class="left-menu floating-menu">
+        <div class="">
+            <table>
+                {{#each _session.adminNavigationItems}}
+                <tr><td><a href="{{link}}" class="menuButton">{{title}}</a></tr>
+                {{/}}
+            </table>
+        </div>
+    </div>

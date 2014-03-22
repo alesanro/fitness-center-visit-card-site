@@ -1,4 +1,29 @@
-<body:>
+<BODY:>
     <div>
         <h1>News</h1>
+    </div>
+    <div class="vertical-two-side-navigator">
+        <div x-bind="click: previousDiscount" class="some-button left-side-button"><<</div>
+        <div x-bind="click: nextDiscount" class="some-button right-side-button">>></div>
+
+        <div class="discount-content">
+            {#with _page.discounts.currentDiscount}
+            <h2>{.title}<h2>
+            <h6>{.description}</h6>
+            {{/}}
+        </div>
+    </div>
+    <div>
+    	{{#if gt(_page.news.length, 0)}}
+	    	{{#each _page.news}}
+	    	<div>
+	    		<h2>{{title}}</h2><h4 style="color: gray">{{publishDate}}</h4>
+	    		<p>{{text}}</p>
+	    		<p><a href="/news">Подробнее...</a></p>
+
+	    	</div>
+	    	{{/}}
+    	{{else}}
+    		<div class="error"><h1>No news found</h1></div>
+    	{{/}}
     </div>

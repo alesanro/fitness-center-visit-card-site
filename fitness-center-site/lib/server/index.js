@@ -41,19 +41,24 @@ function createUserId(req, res, next) {
 }
 
 function loadMenus(req, res, next){
-    var model = req.getModel();
-    var isNavigationExists = model.get('_session.navigationItems');
-    console.log('is navigationExists '+ isNavigationExists);
-    if (!isNavigationExists){
-        var navigationQuery = model.query('navigations', {position: 'top-horizontal'});
-        navigationQuery.fetch(function(error){
-            var result = navigationQuery.get()[0];
-            model.set('_session.navigationItems', result.menus);
-            next();
-        });
-    } else {
+  var model = req.getModel();
+  var isNavigationExists = model.get('_session.navigationItems');
+  if (!isNavigationExists){
+    var navigationQuery = model.query('navigations', {position: 'top-horizontal'});
+    navigationQuery.fetch(function(error){
+      var result = navigationQuery.get()[0];
+      model.set('_session.navigationItems', result.menus);
+
+      var adminNavigationQuery = model.query('navigations', {position: 'left-vertical-admin'});
+      adminNavigationQuery.fetch(function(error) {
+        var result = adminNavigationQuery.get()[0];
+        model.set('_session.adminNavigationItems', result.menus);
         next();
-    }
+      });
+    })
+  } else {
+   next();
+  }
 };
 
 expressApp

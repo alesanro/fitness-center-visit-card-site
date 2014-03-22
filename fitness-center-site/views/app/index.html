@@ -22,7 +22,13 @@
 <Header:>
   <body class="{{dash($ns)}}">
   <ui:connectionAlert>
-  <ui:myMenu>
+  {{#if equal(_session.admin, "false")}}
+  <ui:horizontalMenu>
+  <ui:verticalMenu>
+  {{else}}
+  <h1>ADMIN MODE</h1>
+  <ui:adminMenu>
+  {{/}}
   <div class="content">
     <div class="container">
 
