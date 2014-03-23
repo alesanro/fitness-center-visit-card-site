@@ -2,55 +2,13 @@ var app = require('derby').createApp(module)
 .use(require('derby-ui-boot'))
 .use(require('../../ui'));
 
-var util = require('util');
-
 // ROUTES //
-var admin = require('./admin.js')(app);
 
 // Derby routes are rendered on the client and the server
-app.get('/', function(page, model, params, next) {
-	model.set("_session.admin", "false");
-    page.render('home');   
-    
-});
+var routes = require('./routes')(app);
+var admin = require('./admin/routes')(app);
 
-app.get('/news', function(page, model, params, next){
-	model.set("_session.admin", "false");
-	var newsQuery = model.query("news", {});
-	newsQuery.fetch(function(error) {
-		if (error) {
-			return next(error);
-		}
-		var news = newsQuery.get();
-		model.set("_page.news", news);
-
-		var discountsQuery = model.query("discounts", {});
-		discountsQuery.fetch(function(error) {
-			if (error) {
-				return next(error);
-			}
-
-			var discounts = discountsQuery.get();
-			model.set("_page.discounts.list", discounts);
-			model.set("_page.discounts.index", discounts.length - 1);
-			model.set("_page.discounts.currentDiscount", discounts[model.get("_page.discounts.index")]);
-		});
-
-		page.render('news');
-	});
-});
-
-app.get('/profile', function(page, model, params, next){
-	model.set("_session.admin", "false");
-    page.render('profile');
-});
-
-app.get('/trainings', function(page, model, params, next){
-	model.set("_session.admin", "false");
-    page.render('trainings');
-});
-
-
+// Export functions
 exports.previousDiscount = function() {
 	updateDiscountIndex(this.model, -1);
 }
