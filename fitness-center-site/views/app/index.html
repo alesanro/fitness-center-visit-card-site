@@ -40,3 +40,36 @@
       <p>&copy; Company 2014</p>
     </div>
   </footer>
+
+<Scripts:>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(window).load(function(){
+      $(function() {
+        var nav = $('#nav');
+        var navHomeY = nav.offset().top;
+        var isFixed = false;
+        var $w = $(window);
+        $w.scroll(function() {
+          nav = $('#nav');
+          isFixed = nav.css('position') == 'fixed';
+          var scrollTop = $w.scrollTop();
+          var shouldBeFixed = scrollTop >= navHomeY;
+          if (shouldBeFixed && !isFixed) {
+            nav.css({
+              position: 'fixed',
+              top: 0,
+              left: nav.offset().left,
+              width: nav.width()
+            });
+          }
+          else if (!shouldBeFixed && isFixed)
+          {
+            nav.css({
+              position: 'static'
+            });
+          }
+        });
+      });
+    });
+  </script>  

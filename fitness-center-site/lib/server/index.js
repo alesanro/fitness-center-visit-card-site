@@ -87,7 +87,7 @@ expressApp
   , store: new MongoStore({url: mongoUrl, safe: true})
   }))
   .use(createUserId)
-    .use(loadMenus)
+  .use(loadMenus)
 
   // Create an express middleware from the app's routes
   .use(app.router())
