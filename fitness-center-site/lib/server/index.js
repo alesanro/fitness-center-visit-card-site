@@ -23,7 +23,7 @@ if (process.env.REDIS_HOST) {
 redis.select(process.env.REDIS_DB || 1);
 // Get Mongo configuration 
 var mongoUrl = process.env.MONGO_URL || process.env.MONGOHQ_URL ||
-  'mongo://localhost:27017/fitness-center-db';
+  'mongo://alex_rudyak:alex_rudyak@oceanic.mongohq.com:10047/fitness-center-db';
 
 // The store creates models and syncs data
 var store = derby.createStore({
